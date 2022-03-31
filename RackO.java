@@ -27,20 +27,18 @@ public class RackO {
     public static void removeCard(int selectedCard) {
         for (int i = selectedCard; i < deckOCards.length - 1; i++) { //Remove card from array
             deckOCards[i] = deckOCards[i + 1];
-            System.out.println(deckOCards[i]);
+            //System.out.println(deckOCards[i]);
         }
 
         System.out.println("");
     }
-    
+
     public static void checkArray() {
-        for (int i = 0; i <= deckOCards.length; i++) { //Remove card from array
+        for (int i = 0; i < deckOCards.length; i++) { 
             System.out.println(deckOCards[i]);
         }
 
-        
     }
-    
 
     public static int selectCard() {
         int selectedCard = rand.nextInt(deckOCards.length);
@@ -49,9 +47,9 @@ public class RackO {
                 selectedCard = rand.nextInt(deckOCards.length);
             }
         }
-        if (deckOCards[selectedCard] != 0){
-         return selectedCard;
-        } else{
+        if (deckOCards[selectedCard] != 0) {
+            return selectedCard;
+        } else {
             System.out.println("Error!!!");
             return -1;
         }
@@ -59,7 +57,7 @@ public class RackO {
     }
 
     public static void checkForShuffle() {
-        if (deckOCards.length < 1) {
+        if (deckOCards[0]==0) {
             deckOCards = new int[40];
             for (int i = 0; i < discardPile.length; i++) { //Generate deck, 1-40
                 deckOCards[i] = discardPile[i]; //Transfer Discard Pile into reshuffled draw deck
@@ -83,19 +81,20 @@ public class RackO {
 
         for (int i = 0; i < 10; i++) {
             int selectedCard1 = selectCard();
-            int selectedCard2 = selectCard();
+            plr1Rack[i] = deckOCards[selectedCard1];
             removeCard(selectedCard1);
+            System.out.println(selectedCard1);
+            int selectedCard2 = selectCard();
+            plr2Rack[i] = deckOCards[selectedCard2];
             removeCard(selectedCard2);
-            plr1Rack[i] = selectedCard1;
-            plr2Rack[i] = selectedCard2;
             //System.out.println(plr1Rack[i]+"\t"+plr2Rack[i]);
         }
         int selectedCard3 = selectCard();
+        discard = deckOCards[selectedCard3];
         removeCard(selectedCard3);
         int selectedCard4 = selectCard();
+        draw = deckOCards[selectedCard4];
         removeCard(selectedCard4);
-        discard = selectedCard3;
-        draw = selectedCard4;
     }
 
     public static void showDeck1() { //Method for revealing Rack 1
@@ -174,7 +173,11 @@ public class RackO {
                 userChoice = input.nextInt();
                 if (userChoice == 1) {
                     cardHolding = discard;
+                } else if (userChoice == 3) {
+                    checkArray(); //TEST
+                    cardHolding = draw;
                 } else {
+                    checkForShuffle();
                     int selectedCard = selectCard();
                     draw = deckOCards[selectedCard]; //Recreate a random card to draw
                     removeCard(selectedCard);
@@ -187,7 +190,9 @@ public class RackO {
                 if (userChoice == -1) { //Discard the new draw
                     insertDiscard(discard);
                     discard = cardHolding;
+                
                 } else {
+                    insertDiscard(discard);
                     discard = plr1Rack[userChoice];
                     plr1Rack[userChoice] = cardHolding;
                 }
@@ -217,13 +222,14 @@ public class RackO {
                 userChoice = input.nextInt();
                 if (userChoice == 1) {
                     cardHolding = discard;
-                } else if(userChoice == 3) {
+                } else if (userChoice == 3) {
                     checkArray(); //TEST
                     cardHolding = draw;
-                } else{
+                } else {
+                    checkForShuffle();
                     int selectedCard = selectCard();
                     draw = deckOCards[selectedCard];  //Recreate a random card to draw
-
+                    removeCard(selectedCard);
                     cardHolding = draw;
                     System.out.println("You drew " + draw);
                 }
@@ -234,6 +240,7 @@ public class RackO {
                     insertDiscard(discard);
                     discard = cardHolding;
                 } else {
+                    insertDiscard(discard);
                     discard = plr2Rack[userChoice];
                     plr2Rack[userChoice] = cardHolding;
                 }
